@@ -19,13 +19,13 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: maven
+          cache: gradle
 
-      - name: Build with Maven
-        run: mvn --batch-mode --no-transfer-progress package
+      - name: Build with Gradle
+        run: ./gradlew build
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: donutsmp
-          path: target/*.jar
+          path: app/build/outputs/apk/**/*.apk
