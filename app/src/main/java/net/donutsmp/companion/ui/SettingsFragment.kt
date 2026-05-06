@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
 import net.donutsmp.companion.api.ApiClient
 import net.donutsmp.companion.api.AuctionSearchRequest
 import net.donutsmp.companion.databinding.FragmentSettingsBinding
-import net.donutsmp.companion.worker.AuctionMonitorWorker
+import net.donutsmp.companion.worker.AuctionMonitorService
 
 class SettingsFragment : Fragment() {
     private var _binding: FragmentSettingsBinding? = null
@@ -33,25 +33,26 @@ class SettingsFragment : Fragment() {
 
         val prefs = requireContext().getSharedPreferences("donutsmp_prefs", Context.MODE_PRIVATE)
         val savedKey = prefs.getString("api_key", "")
-        val savedInterval = prefs.getInt("monitoring_interval_minutes", 15)
+        val savedInterval = prefs.getInt("monitoring_interval_seconds", 5)
 
         binding.etApiKey.setText(savedKey)
         binding.etInterval.setText(savedInterval.toString())
 
         binding.btnSaveSettings.setOnClickListener {
             val apiKey = binding.etApiKey.text.toString().trim()
-            val interval = binding.etInterval.text.toString().toIntOrNull() ?: 15
+            val interval = binding.etInterval.text.toString().toIntOrNull() ?: 5
 
             prefs.edit()
                 .putString("api_key", apiKey)
-                .putInt("monitoring_interval_minutes", interval)
+                .putInt("monitoring_interval_seconds", interval)
                 .apply()
 
             if (apiKey.isNotEmpty()) {
-                AuctionMonitorWorker.schedule(requireContext(), interval.toLong())
+                AuctionMonitorService.stop(requireContext())
+                AuctionMonitorService.start(requireContext())
                 Toast.makeText(context, "Settings saved. Monitoring started.", Toast.LENGTH_SHORT).show()
             } else {
-                AuctionMonitorWorker.cancel(requireContext())
+                AuctionMonitorService.stop(requireContext())
                 Toast.makeText(context, "Settings saved. Monitoring stopped (no API key).", Toast.LENGTH_SHORT).show()
             }
         }

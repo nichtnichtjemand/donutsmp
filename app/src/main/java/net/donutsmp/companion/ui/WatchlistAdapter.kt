@@ -29,7 +29,7 @@ class WatchlistAdapter(
 
         fun bind(item: WatchedItem) {
             binding.tvItemName.text = item.itemName
-            binding.tvThreshold.text = "Threshold: %.2f".format(item.priceThreshold)
+            binding.tvThreshold.text = "Max Price: %.2f".format(item.priceThreshold)
             binding.switchEnabled.isChecked = item.enabled
             binding.switchEnabled.setOnCheckedChangeListener(null)
             binding.switchEnabled.setOnCheckedChangeListener { _, _ -> onToggle(item) }

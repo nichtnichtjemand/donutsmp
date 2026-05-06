@@ -25,7 +25,7 @@ class AddWatchItemDialog(
             hint = "Item name (e.g., Diamond)"
         }
         val etThreshold = EditText(context).apply {
-            hint = "Price threshold"
+            hint = "Max price"
             inputType = android.text.InputType.TYPE_CLASS_NUMBER or
                     android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
         }
@@ -45,7 +45,7 @@ class AddWatchItemDialog(
                     return@setPositiveButton
                 }
                 if (threshold == null || threshold <= 0) {
-                    Toast.makeText(context, "Please enter a valid price threshold", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Please enter a valid max price", Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
                 }
 
